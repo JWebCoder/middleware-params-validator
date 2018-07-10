@@ -1,29 +1,5 @@
 // middleware that validates parameters on request
-const EMAIL_REGEX = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-
-class Validators {
-  email (param) {
-    return EMAIL_REGEX.test(param)
-  }
-
-  length (param, rules) {
-    const RULE_DATA = rules.split('_')
-
-    if (RULE_DATA[0] === 'min') {
-      return param.length >= parseInt(RULE_DATA[1], 10)
-    }
-
-    if (RULE_DATA[0] === 'max') {
-      return param.length <= parseInt(RULE_DATA[1], 10)
-    }
-
-    if (RULE_DATA[0] === 'exact') {
-      return param.length === parseInt(RULE_DATA[1], 10)
-    }
-  }
-}
-
-const validators = new Validators()
+import validators from './validators'
 
 function getParameters (params) {
   return [].concat(params)
@@ -40,7 +16,7 @@ function validateParameter (req, target, parameter, invalid) {
     let invalidParameter = checkParameter(req, target, parameterName)
     if (invalidParameter) {
       invalid.push(invalidParameter)
-      return
+      return invalid
     }
     parameter[parameterName].forEach(
       validator => {
@@ -62,9 +38,14 @@ function checkParameter (req, target, parameterName) {
 }
 
 function validate (validatorKey, req, target, parameterName, params) {
-  if (!validators[validatorKey](req[target][parameterName], params)) {
+  const result = validators[validatorKey](req[target][parameterName], params)
+  if (!result) {
     return `'${parameterName}' Parameter mismatch rule '${validatorKey}${params ? `: ${params}` : ''}'`
+  } else if (typeof result === 'string') {
+    return result
   }
+
+  return false
 }
 
 function parseValidator (req, target, parameterName, validator) {
@@ -99,6 +80,8 @@ export default function validator (data) {
           )
         }
       )
+    } else {
+      next()
     }
     if (invalid.length !== 0) {
       const err = new Error(invalid.join(' | '))
