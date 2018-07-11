@@ -1,0 +1,45 @@
+{
+  "name": "middleware-params-validator",
+  "version": "1.0.0",
+  "description": "A simple middleware to validate the request object (body, params, querystring, headers, customData, ...) againts a json structure",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "babel src -d lib",
+    "test": "nyc --reporter=html mocha --require @babel/register --recursive tests"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/JWebCoder/middleware-params-validator.git"
+  },
+  "keywords": [
+    "middleware",
+    "express",
+    "parameters",
+    "body",
+    "validation",
+    "validator",
+    "json"
+  ],
+  "author": "João Moura <joao87moura@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JWebCoder/middleware-params-validator/issues"
+  },
+  "homepage": "https://github.com/JWebCoder/middleware-params-validator#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "@babel/cli": "^7.0.0-beta.52",
+    "@babel/core": "^7.0.0-beta.52",
+    "@babel/node": "^7.0.0-beta.52",
+    "@babel/preset-env": "^7.0.0-beta.52",
+    "@babel/register": "^7.0.0-beta.52",
+    "eslint": "^5.1.0",
+    "eslint-config-standard": "^11.0.0",
+    "eslint-plugin-import": "^2.13.0",
+    "eslint-plugin-node": "^6.0.1",
+    "eslint-plugin-promise": "^3.8.0",
+    "eslint-plugin-standard": "^3.1.0",
+    "mocha": "^5.2.0",
+    "nyc": "^12.0.2"
+  }
+}
