@@ -8,8 +8,19 @@ const testWithStringParameter = validator({
 
 const testWithObjectParameter = validator({
   params: {
-    'email': [],
+    param: 'email',
+    validations: [],
   },
+})
+
+const testWithOptional = validator({
+  params: [
+    'name',
+    {
+      param: 'count',
+      optional: true,
+    },
+  ],
 })
 
 describe('Test validator builder', function () {
@@ -61,6 +72,20 @@ describe('Test with object parameter', function () {
     testWithObjectParameter({params: {}}, {}, (err) => {
       assert.equal(err.message, 'Missing parameter email')
     })
+  })
+
+  it('should not return an error if missing optional parameter', function () {
+    testWithOptional(
+      {
+        params: {
+          name: 'joao moura',
+        },
+      },
+      {},
+      (err) => {
+        assert.equal(err, undefined)
+      }
+    )
   })
 
   it('should not return any error when there are no errors', function () {

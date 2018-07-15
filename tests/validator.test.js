@@ -3,7 +3,8 @@ import assert from 'assert'
 
 const testWithObjectParameterAndValidators = validator({
   params: {
-    'email': [
+    param: 'email',
+    validations: [
       'email',
       {
         length: 'min_10',
@@ -20,12 +21,34 @@ const testWithObjectParameterAndValidators = validator({
 
 const testWithValidatorCustomError = validator({
   params: {
-    'email': [
+    param: 'email',
+    validations: [
       {
         length: 'xpto_10',
       },
     ],
   },
+})
+
+const testWithOptional = validator({
+  params: [
+    {
+      param: 'name',
+      validations: [
+        {
+          words: 2,
+        },
+      ],
+      optional: true,
+    },
+    {
+      param: 'count',
+      validations: [
+        'number',
+      ],
+      optional: true,
+    },
+  ],
 })
 
 export default function () {
@@ -96,6 +119,36 @@ export default function () {
         {},
         (err) => {
           assert.equal(err.message.indexOf("'email' Parameter mismatch rule 'length: exact_20'"), 0)
+        }
+      )
+    })
+
+    it('should return an error if words validator fails', function () {
+      testWithOptional(
+        {
+          params: {
+            name: 'joao',
+          },
+        },
+        {},
+        (err) => {
+          assert.equal(err.message.indexOf("'name' Parameter mismatch rule 'words: 2'"), 0)
+        }
+      )
+    })
+
+    it('should return an error if number validator fails', function () {
+      testWithOptional(
+        {
+          params: {
+            name: 'joao moura',
+            count: '2',
+          },
+        },
+        {},
+        (err) => {
+          console.log(err.message)
+          assert.equal(err.message.indexOf("'count' Parameter mismatch rule 'number'"), 0)
         }
       )
     })

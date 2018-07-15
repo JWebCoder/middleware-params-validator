@@ -22,6 +22,14 @@ class Validators {
 
     return `Rule '${RULE_DATA[0]}' not found`
   }
+
+  words (param, count) {
+    return param.split(' ').length >= count
+  }
+
+  number (param) {
+    return typeof param === 'number'
+  }
 }
 
 const validators = new Validators()

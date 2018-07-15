@@ -12,20 +12,23 @@ function validateParameter (req, target, parameter, invalid) {
       invalid.push(invalidParameter)
     }
   } else {
-    let parameterName = Object.keys(parameter)[0]
+    let parameterName = parameter.param
     let invalidParameter = checkParameter(req, target, parameterName)
-    if (invalidParameter) {
+    if (invalidParameter && !parameter.optional) {
       invalid.push(invalidParameter)
       return invalid
     }
-    parameter[parameterName].forEach(
-      validator => {
-        let invalidParameter = parseValidator(req, target, parameterName, validator)
-        if (invalidParameter) {
-          invalid.push(invalidParameter)
+
+    if (!invalidParameter) {
+      parameter.validations && parameter.validations.forEach(
+        validator => {
+          let invalidParameter = parseValidator(req, target, parameterName, validator)
+          if (invalidParameter) {
+            invalid.push(invalidParameter)
+          }
         }
-      }
-    )
+      )
+    }
   }
 
   return invalid
