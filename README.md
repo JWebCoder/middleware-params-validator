@@ -80,6 +80,8 @@ If you have a controller/middleware/... that adds data to the request object, yo
 
 - email
 - length (supports extra data: min_N, max_N, exact_N)
+- number
+- words (supports extra data that is the minimum number of words: N )
 
 ## example
 
