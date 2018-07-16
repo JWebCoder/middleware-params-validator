@@ -5,6 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm run build",
+    "preversion": "npm run test",
     "build": "babel src -d lib",
     "test": "nyc --reporter=html mocha --require @babel/register --recursive tests"
   },
