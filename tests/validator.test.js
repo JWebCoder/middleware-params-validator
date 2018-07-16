@@ -36,7 +36,7 @@ const testWithOptional = validator({
       param: 'name',
       validations: [
         {
-          words: 2,
+          words: 'min_2',
         },
       ],
       optional: true,
@@ -49,6 +49,23 @@ const testWithOptional = validator({
       optional: true,
     },
   ],
+})
+
+const testWithWordRules = validator({
+  params: {
+    param: 'name',
+    validations: [
+      {
+        words: 'min_2',
+      },
+      {
+        words: 'max_4',
+      },
+      {
+        words: 'exact_3',
+      },
+    ],
+  },
 })
 
 export default function () {
@@ -123,7 +140,7 @@ export default function () {
       )
     })
 
-    it('should return an error if words validator fails', function () {
+    it('should return an error if words min validator fails', function () {
       testWithOptional(
         {
           params: {
@@ -132,7 +149,51 @@ export default function () {
         },
         {},
         (err) => {
-          assert.equal(err.message.indexOf("'name' Parameter mismatch rule 'words: 2'"), 0)
+          assert.equal(err.message.indexOf("'name' Parameter mismatch rule 'words: min_2'"), 0)
+        }
+      )
+    })
+
+    it('should return an error if words max validator fails', function () {
+      testWithWordRules(
+        {
+          params: {
+            name: 'joao moura joao moura joao',
+            count: '2',
+          },
+        },
+        {},
+        (err) => {
+          assert.equal(err.message.indexOf("'name' Parameter mismatch rule 'words: max_4'"), 0)
+        }
+      )
+    })
+
+    it('should return an error if words exact validator fails', function () {
+      testWithWordRules(
+        {
+          params: {
+            name: 'joao moura',
+            count: '2',
+          },
+        },
+        {},
+        (err) => {
+          assert.equal(err.message.indexOf("'name' Parameter mismatch rule 'words: exact_3'"), 0)
+        }
+      )
+    })
+
+    it('should not return an error if number does not exists', function () {
+      testWithOptional(
+        {
+          params: {
+            name: 'joao moura',
+          },
+        },
+        {},
+        (err) => {
+          assert.equal(err, undefined)
         }
       )
     })
@@ -147,7 +208,6 @@ export default function () {
         },
         {},
         (err) => {
-          console.log(err.message)
           assert.equal(err.message.indexOf("'count' Parameter mismatch rule 'number'"), 0)
         }
       )
