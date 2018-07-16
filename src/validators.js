@@ -23,8 +23,19 @@ class Validators {
     return `Rule '${RULE_DATA[0]}' not found`
   }
 
-  words (param, count) {
-    return param.split(' ').length >= count
+  words (param, rules) {
+    const RULE_DATA = rules.split('_')
+    const WORDS_ARRAY_LENGTH = param.split(' ').filter(word => word).length
+    switch (RULE_DATA[0]) {
+      case 'min':
+        return WORDS_ARRAY_LENGTH >= parseInt(RULE_DATA[1], 10)
+      case 'max':
+        return WORDS_ARRAY_LENGTH <= parseInt(RULE_DATA[1], 10)
+      case 'exact':
+        return WORDS_ARRAY_LENGTH === parseInt(RULE_DATA[1], 10)
+      default:
+        return `Rule '${RULE_DATA[0]}' not found`
+    }
   }
 
   number (param) {

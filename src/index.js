@@ -88,7 +88,7 @@ export default function validator (data) {
     }
     if (invalid.length !== 0) {
       const err = new Error(invalid.join(' | '))
-      err.status = 402
+      err.status = 422
       next(err)
       return
     }

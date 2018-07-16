@@ -1,10 +1,11 @@
 {
   "name": "middleware-params-validator",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simple middleware to validate the request object (body, params, querystring, headers, customData, ...) againts a json structure",
   "main": "lib/index.js",
   "scripts": {
     "prepublish": "npm run build",
+    "preversion": "npm run test",
     "build": "babel src -d lib",
     "test": "nyc --reporter=html mocha --require @babel/register --recursive tests"
   },

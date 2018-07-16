@@ -33,6 +33,15 @@ describe('Test validator builder', function () {
   })
 })
 
+describe('Test error status', function () {
+  it('If there is any error with a parameter, the error should be 422', function () {
+    testWithObjectParameter({}, {}, (err) => {
+      console.log(err)
+      assert.equal(err.status, '422')
+    })
+  })
+})
+
 describe('Test main object', function () {
   it('should return "Missing object ****" message when missing main object', function () {
     testWithObjectParameter({}, {}, (err) => {
