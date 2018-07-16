@@ -159,7 +159,6 @@ export default function () {
         {
           params: {
             name: 'joao moura joao moura joao',
-            count: '2',
           },
         },
         {},
@@ -174,12 +173,35 @@ export default function () {
         {
           params: {
             name: 'joao moura',
-            count: '2',
           },
         },
         {},
         (err) => {
           assert.equal(err.message.indexOf("'name' Parameter mismatch rule 'words: exact_3'"), 0)
+        }
+      )
+    })
+
+    it('should return an error if words rules doesnt exist', function () {
+      const testWordMissingRule = validator({
+        params: {
+          param: 'name',
+          validations: [
+            {
+              words: 'moreThan_2',
+            },
+          ],
+        },
+      })
+      testWordMissingRule(
+        {
+          params: {
+            name: 'joao moura',
+          },
+        },
+        {},
+        (err) => {
+          assert.equal(err.message.indexOf("Rule 'moreThan' not found"), 0)
         }
       )
     })
