@@ -1,4 +1,4 @@
-import validator from '../src'
+import validator, { setCustomValidators } from '../src'
 import validatorsTests from './validator.test.js'
 import assert from 'assert'
 
@@ -36,9 +36,83 @@ describe('Test validator builder', function () {
 describe('Test error status', function () {
   it('If there is any error with a parameter, the error should be 422', function () {
     testWithObjectParameter({}, {}, (err) => {
-      console.log(err)
       assert.equal(err.status, '422')
     })
+  })
+})
+
+describe('Test custom validator builder', function () {
+  it('It should be possible to set a new validator', function () {
+    setCustomValidators({
+      startsWith: function (param, rules) {
+        assert.equal(param, 'testParam')
+        assert.equal(rules, 'test')
+        return param.startsWith(rules)
+      },
+    })
+
+    const customValidators = validator({
+      params: {
+        param: 'parameter',
+        validations: [
+          {
+            startsWith: 'test',
+          },
+        ],
+      },
+    })
+
+    customValidators({
+      params: {
+        parameter: 'testParam',
+      },
+    }, {}, (err) => {
+      assert.equal(err, undefined)
+    })
+  })
+
+  it('A custom validator should return true if valid, and false if invalid', function () {
+    setCustomValidators({
+      endsWith: function (param, rules) {
+        assert.equal(rules, 'Test')
+        return param.endsWith(rules)
+      },
+    })
+    const customValidators = validator({
+      params: {
+        param: 'parameter',
+        validations: [
+          {
+            endsWith: 'Test',
+          },
+        ],
+      },
+    })
+
+    customValidators({
+      params: {
+        parameter: 'testParam',
+      },
+    }, {}, (err) => {
+      assert.equal(err.message, "'parameter' Parameter mismatch rule 'endsWith: Test'")
+    })
+
+    customValidators({
+      params: {
+        parameter: 'paramTest',
+      },
+    }, {}, (err) => {
+      assert.equal(err, undefined)
+    })
+  })
+
+  it('Seting a custom validator with the same name of another validator should return an Error', function () {
+    const result = setCustomValidators({
+      endsWith: function (param, rules) {
+        return param.endsWith(rules)
+      },
+    })
+    assert.equal(result instanceof Error, true)
   })
 })
 

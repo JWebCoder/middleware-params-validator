@@ -95,3 +95,7 @@ export default function validator (data) {
     next()
   }
 }
+
+export const setCustomValidators = (customValidators) => {
+  return validators.setCustomValidators(customValidators)
+}

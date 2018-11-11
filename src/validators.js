@@ -41,6 +41,23 @@ class Validators {
   number (param) {
     return typeof param === 'number'
   }
+
+  setCustomValidators (customValidators = {}) {
+    const customValidatorsKeys = Object.keys(customValidators)
+    const alreadyExistingValidator = customValidatorsKeys.find(
+      customValidatorKey => this[customValidatorKey]
+    )
+
+    if (alreadyExistingValidator) {
+      return new Error(`You are trying to set a custom validator with the same name of an already existing validator: ${alreadyExistingValidator}`)
+    }
+
+    customValidatorsKeys.forEach(
+      customValidatorKey => {
+        this[customValidatorKey] = customValidators[customValidatorKey]
+      }
+    )
+  }
 }
 
 const validators = new Validators()
