@@ -17,7 +17,7 @@ Simply add the validator middleware to your routes with the desired json structu
     /* parameter of the body */
     email: [    /* array of validations to execute    */
       'email',  /* just checking if its a valid email */
-    ],          /*------------------------------------*/
+    ],
   },
   /* params: another object inside the request */
   params: 'id', /* you can also pass a string instead of an object, this means that it will only check if the parameter exists */
@@ -28,7 +28,7 @@ Simply add the validator middleware to your routes with the desired json structu
 
 ```js
 {
-  /* custom: just an object inside the request */
+  /* params: just an object inside the request */
   params: [
     /* parameter of the custom object */
     'id',
@@ -82,6 +82,39 @@ If you have a controller/middleware/... that adds data to the request object, yo
 - length (supports extra data: min_N, max_N, exact_N)
 - number
 - words (supports extra data that is the minimum number of words: N )
+
+## custom validators
+
+You can add custom validators to be used later on your code
+
+```js
+
+import { setCustomValidator } from 'middleware-params-validator'
+
+/* adding a new startsWith validator */
+setCustomValidators({
+  startsWith: function (param = '', extraData = '') {
+    return typeof param === 'string' && param.startsWith(extraData)
+  },
+})
+
+/* you can use it later like any other validator */
+{
+  /* params: just an object inside the request */
+  params: [
+    /* parameter of the custom object */
+    {
+      email: [
+        {
+          /* validator with extra data */
+          startsWith: 'initialText'
+        },
+      ],
+    },
+  ]
+}
+```
+
 
 ## example
 
